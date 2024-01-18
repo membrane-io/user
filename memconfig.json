@@ -1,0 +1,340 @@
+{
+  "schema": {
+    "types": [
+      {
+        "name": "Root",
+        "actions": [
+          {
+            "name": "ask",
+            "type": "String",
+            "description": "Asks a question to the user of this Membrane account. This action won't resolve until the user responds to the question.",
+            "params": [
+              {
+                "description": "The question to ask the user.",
+                "name": "question",
+                "type": "String"
+              },
+              {
+                "name": "node",
+                "type": "Ref",
+                "ofType": "Void",
+                "description": "An optional graph node to attach to the question",
+                "optional": true
+              },
+              {
+                "name": "channel",
+                "type": "Ref",
+                "ofType": "Channel",
+                "optional": true
+              }
+            ]
+          },
+          {
+            "name": "tell",
+            "type": "Void",
+            "description": "Sends a message to the user of this Membrane account.",
+            "params": [
+              {
+                "name": "message",
+                "type": "String",
+                "optional": false
+              },
+              {
+                "name": "node",
+                "type": "Ref",
+                "ofType": "Void",
+                "description": "An optional graph node to attach to the message",
+                "optional": true
+              },
+              {
+                "name": "channel",
+                "type": "Ref",
+                "ofType": "Channel",
+                "optional": true
+              }
+            ]
+          },
+          {
+            "name": "markRead",
+            "type": "Void"
+          }
+        ],
+        "fields": [
+          {
+            "name": "threads",
+            "type": "ThreadCollection",
+            "description": "A conversation thread defined by a channel."
+          },
+          {
+            "name": "messages",
+            "type": "MessageCollection",
+            "description": "The collection of all inbound and outbound messages."
+          },
+          {
+            "name": "unreadCount",
+            "type": "Int",
+            "description": "The number of unread messages. Invoke markRead to reset."
+          },
+          {
+            "name": "unansweredCount",
+            "type": "Int",
+            "description": "The number of unanswered questions."
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "description": "The name of this thread as specified in the channel."
+          }
+        ]
+      },
+      {
+        "name": "Message",
+        "actions": [
+          {
+            "name": "respond",
+            "type": "Void",
+            "description": "Responds to this message, only valid for questions.",
+            "params": [
+              {
+                "name": "text",
+                "type": "String"
+              }
+            ]
+          }
+        ],
+        "fields": [
+          {
+            "name": "id",
+            "type": "Int",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "threadId",
+            "type": "Int",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "kind",
+            "type": "String",
+            "description": "The kind of message. One of: 'tell', 'tell-out', 'question', 'response'",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "text",
+            "type": "String",
+            "description": "The text of the message",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "pending",
+            "type": "Boolean",
+            "description": "Whether or not the message is pending a response. Only relevant to questions.",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "receivedAt",
+            "type": "String",
+            "description": "The time the message was received",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "channel",
+            "description": "A channel that can be used to communicate back with the sender",
+            "type": "Ref",
+            "ofType": "Channel",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "node",
+            "description": "An optional graph node attached to the message. TODO: Type should be Ref<Void>",
+            "type": "Ref",
+            "ofType": "String",
+            "hints": {
+              "primary": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "Channel",
+        "description": "A channel that can be used to communicate back with the sender of a message",
+        "actions": [
+          {
+            "name": "tell",
+            "description": "Sends a message on this channel",
+            "type": "Void",
+            "params": [
+              {
+                "name": "message",
+                "type": "String"
+              }
+            ]
+          }
+        ],
+        "fields": [
+          {
+            "name": "name",
+            "type": "String",
+            "description": "A descriptive name for the channel"
+          }
+        ]
+      },
+      {
+        "name": "MessagePage",
+        "fields": [
+          {
+            "name": "items",
+            "type": "List",
+            "ofType": "Message"
+          },
+          {
+            "name": "next",
+            "type": "Ref",
+            "ofType": "MessagePage"
+          }
+        ]
+      },
+      {
+        "name": "MessageCollection",
+        "fields": [
+          {
+            "name": "one",
+            "type": "Message",
+            "params": [
+              {
+                "name": "id",
+                "type": "Int"
+              }
+            ]
+          },
+          {
+            "name": "page",
+            "type": "MessagePage",
+            "params": [
+              {
+                "name": "before",
+                "type": "Int",
+                "optional": true
+              },
+              {
+                "name": "pageSize",
+                "type": "Int",
+                "optional": true
+              }
+            ]
+          }
+        ],
+        "actions": []
+      },
+      {
+        "name": "Thread",
+        "fields": [
+          {
+            "name": "messages",
+            "type": "MessageCollection"
+          },
+          {
+            "name": "channel",
+            "type": "Ref",
+            "ofType": "Channel",
+            "description": "The channel used to communicate back with the sender."
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "description": "A descriptive name for the channel.",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "id",
+            "type": "Int"
+          }
+        ],
+        "actions": [
+          {
+            "name": "tell",
+            "type": "Void",
+            "description": "Sends a message on this thread's channel.",
+            "params": [
+              {
+                "name": "message",
+                "type": "String"
+              },
+              {
+                "name": "node",
+                "type": "Ref",
+                "ofType": "Void",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ThreadPage",
+        "fields": [
+          {
+            "name": "items",
+            "type": "List",
+            "ofType": "Thread"
+          },
+          {
+            "name": "next",
+            "type": "Ref",
+            "ofType": "ThreadPage"
+          }
+        ]
+      },
+      {
+        "name": "ThreadCollection",
+        "fields": [
+          {
+            "name": "one",
+            "type": "Thread",
+            "params": [
+              {
+                "name": "id",
+                "type": "Int"
+              }
+            ]
+          },
+          {
+            "name": "page",
+            "type": "ThreadPage",
+            "params": [
+              {
+                "name": "page",
+                "type": "String",
+                "optional": true
+              },
+              {
+                "name": "pageSize",
+                "type": "String",
+                "optional": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "email": "sys-email:"
+  }
+}

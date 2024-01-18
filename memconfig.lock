@@ -1,0 +1,49 @@
+{
+  "types": {
+    "email": {
+      "gref_hash": "161c65c8cac0a7723f6c7fb0c82a51a4776fff50098de5f41afca6d8b9ddd136",
+      "type": "sys-email:Root"
+    }
+  },
+  "imports": [
+    {
+      "name": "sys-email",
+      "schema": {
+        "types": [
+          {
+            "name": "Root",
+            "description": "",
+            "actions": [
+              {
+                "name": "send",
+                "description": "",
+                "type": "Void",
+                "params": [
+                  {
+                    "name": "subject",
+                    "description": "",
+                    "type": "String",
+                    "optional": false
+                  },
+                  {
+                    "name": "body",
+                    "description": "",
+                    "type": "String",
+                    "optional": false
+                  }
+                ],
+                "hints": {}
+              }
+            ],
+            "fields": [],
+            "events": []
+          }
+        ],
+        "imports": []
+      },
+      "source": {
+        "Program": "tbd"
+      }
+    }
+  ]
+}
