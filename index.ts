@@ -141,6 +141,8 @@ export const Root = {
 
 export const Thread = {
   gref: (_, { obj }) => root.threads.one({ id: obj.id }),
+  unreadCount: (_, { obj }) => obj.messages.length - (obj.readUpTo ?? 0),
+  unansweredCount: () => Object.keys(state.unanswered).length,
   tell: async ({ message, node }, { self }) => {
     const threadId = self.$argsAt(root.threads.one).id;
     const thread = threads[threadId];
@@ -155,6 +157,11 @@ export const Thread = {
     messages.push(msg);
     thread.messages.push(msg);
     await thread.channel?.tell({ message });
+  },
+  markRead: (_, { self }) => {
+    const threadId = self.$argsAt(root.threads.one).id;
+    const thread = threads[threadId];
+    thread.readUpTo = thread.messages.length;
   },
 };
 

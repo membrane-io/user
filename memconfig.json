@@ -251,7 +251,10 @@
             "name": "channel",
             "type": "Ref",
             "ofType": "Channel",
-            "description": "The channel used to communicate back with the sender."
+            "description": "The channel used to communicate back with the sender.",
+            "hints": {
+              "primary": true
+            }
           },
           {
             "name": "name",
@@ -263,7 +266,24 @@
           },
           {
             "name": "id",
-            "type": "Int"
+            "type": "Int",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "unreadCount",
+            "type": "Int",
+            "hints": {
+              "primary": true
+            }
+          },
+          {
+            "name": "unansweredCount",
+            "type": "Int",
+            "hints": {
+              "primary": true
+            }
           }
         ],
         "actions": [
@@ -283,6 +303,10 @@
                 "optional": true
               }
             ]
+          },
+          {
+            "name": "markRead",
+            "type": "Void"
           }
         ]
       },
